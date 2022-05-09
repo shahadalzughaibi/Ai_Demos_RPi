@@ -50,7 +50,7 @@ def colorWipe(strip, color, wait_ms=20):
 
 def theaterChase(strip, color, wait_ms=20, iterations=10):
     """Movie theater light style chaser animation."""
-    for j in range(iterations):
+    for _ in range(iterations):
         for q in range(3):
             for i in range(0, strip.numPixels(), 3):
                 strip.setPixelColor(i + q, color)
@@ -105,7 +105,7 @@ if __name__ == '__main__':
             if apds.isGestureAvailable():
                 motion = apds.readGesture()
                 gesture = dirs.get(motion, "unknown")
-                print("Gesture={}".format(gesture))
+                print(f"Gesture={gesture}")
                 if gesture == "up":
                     colorWipe(strip, Color(255, 0, 0))
                 if gesture == "down":

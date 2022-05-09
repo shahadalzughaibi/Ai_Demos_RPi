@@ -206,10 +206,8 @@ class Raspi_DCMotor:
 			self.MC.setPin(self.IN1pin, 0)
 			self.MC.setPin(self.IN2pin, 0)
 	def setSpeed(self, speed):
-		if (speed < 0):
-			speed = 0
-		if (speed > 255):
-			speed = 255
+		speed = max(speed, 0)
+		speed = min(speed, 255)
 		self.MC._pwm.setPWM(self.PWMpin, 0, speed*16)
 
 class Raspi_MotorHAT:
@@ -234,7 +232,7 @@ class Raspi_MotorHAT:
 	def setPin(self, pin, value):
 		if (pin < 0) or (pin > 15):
 			raise NameError('PWM pin must be between 0 and 15 inclusive')
-		if (value != 0) and (value != 1):
+		if value not in [0, 1]:
 			raise NameError('Pin value must be 0 or 1!')
 		if (value == 0):
 			self._pwm.setPWM(pin, 0, 4096)
