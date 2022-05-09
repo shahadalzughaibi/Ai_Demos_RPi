@@ -15,15 +15,8 @@ class Raspi_I2C(object):
     try:
       with open('/proc/cpuinfo', 'r') as infile:
         for line in infile:
-          # Match a line of the form "Revision : 0002" while ignoring extra
-          # info in front of the revsion (like 1000 when the Pi was over-volted).
-          match = re.match('Revision\s+:\s+.*(\w{4})$', line)
-          if match and match.group(1) in ['0000', '0002', '0003']:
-            # Return revision 1 if revision ends with 0000, 0002 or 0003.
-            return 1
-          elif match:
-            # Assume revision 2 if revision ends with any other 4 chars.
-            return 2
+          if match := re.match('Revision\s+:\s+.*(\w{4})$', line):
+            return 1 if match[1] in ['0000', '0002', '0003'] else 2
         # Couldn't find the revision, assume revision 0 like older code for compatibility.
         return 0
     except:
@@ -48,7 +41,7 @@ class Raspi_I2C(object):
     # Courtesy Vishal Sapre
     byteCount = len(hex(data)[2:].replace('L','')[::2])
     val       = 0
-    for i in range(byteCount):
+    for _ in range(byteCount):
       val    = (val << 8) | (data & 0xff)
       data >>= 8
     return val
